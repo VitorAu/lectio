@@ -1,5 +1,7 @@
 import { UserRoutes } from "./routes/user.ts";
+import { AuthRoutes } from "./routes/auth.ts";
 import fastify from "fastify";
+import jwt from "@fastify/jwt";
 
 export function BuildServer() {
   const server = fastify({
@@ -14,7 +16,10 @@ export function BuildServer() {
     },
   });
 
+  server.register(jwt, { secret: String(process.env.JWT_SECRET) });
+  
   server.register(UserRoutes, { prefix: "/api/users" });
+  server.register(AuthRoutes, { prefix: "/api/auth" });
 
   return server;
 }
