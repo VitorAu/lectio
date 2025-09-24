@@ -26,10 +26,13 @@ export async function AuthRoutes(fastify: FastifyInstance) {
       }
 
       const response = await userModel.create(data);
+      const [user] = response;
+      const { password, ...removePasswordResponse } = user;
+
       return res.code(200).send({
         status: "success",
         message: "User created successfully",
-        data: response,
+        data: removePasswordResponse,
       } satisfies IResponse);
     } catch (err) {
       return res.code(500).send({
@@ -74,7 +77,7 @@ export async function AuthRoutes(fastify: FastifyInstance) {
 
       return res.code(200).send({
         status: "success",
-        message: "User Login successfull",
+        message: "User login successfull",
         data: {
           accessToken,
           refreshToken,
