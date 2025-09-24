@@ -1,3 +1,4 @@
+import { UserRoutes } from "./routes/user.ts";
 import fastify from "fastify";
 
 const PORT = 8000;
@@ -15,6 +16,8 @@ const server = fastify({
 
 async function initializeApp() {
   try {
+    server.register(UserRoutes, { prefix: "/v1/users" });
+
     await server.listen({ port: PORT }).then(() => {
       server.log.info("🚀 HTTP server is running");
     });

@@ -4,10 +4,6 @@
   "_version": "24.0.0",
 
   "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["src/*"]
-    },
     "lib": [
       "es2024",
       "ESNext.Array",
@@ -25,5 +21,4 @@
     "allowImportingTsExtensions": true,
     "noEmit": true
   },
-  "include": ["src/**/*.ts"]
 }

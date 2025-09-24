@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node --watch src/app.ts",
+    "start": "node --watch src/server.ts",
     "db:start": "docker compose up -d",
     "db:stop": "docker compose stop",
     "knex:latest": "knex migrate:latest",
