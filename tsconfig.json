@@ -4,10 +4,6 @@
   "_version": "24.0.0",
 
   "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["src/*"]
-    },
     "lib": [
       "es2024",
       "ESNext.Array",
@@ -23,7 +19,10 @@
     "skipLibCheck": true,
     "moduleResolution": "node16",
     "allowImportingTsExtensions": true,
-    "noEmit": true
+    "noEmit": true,
+
+    "types": ["node", "tap"]
   },
-  "include": ["src/**/*.ts"]
+
+  "include": ["src", "tests"]
 }

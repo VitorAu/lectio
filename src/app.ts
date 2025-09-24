@@ -1,19 +1,9 @@
-import fastify from "fastify";
+import { BuildServer } from "./server.ts";
 
+const server = BuildServer();
 const PORT = 8000;
-const server = fastify({
-  logger: {
-    transport: {
-      target: "pino-pretty",
-      options: {
-        colorize: true,
-        ignore: "pid, hostname",
-      },
-    },
-  },
-});
 
-async function initializeApp() {
+async function InitializeApp() {
   try {
     await server.listen({ port: PORT }).then(() => {
       server.log.info("🚀 HTTP server is running");
@@ -24,4 +14,4 @@ async function initializeApp() {
   }
 }
 
-initializeApp();
+InitializeApp();
