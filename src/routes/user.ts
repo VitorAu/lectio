@@ -7,94 +7,6 @@ import bcrypt from "bcrypt";
 const userModel = new UserModel();
 
 export async function UserRoutes(fastify: FastifyInstance) {
-  fastify.post("/", async (req, res): Promise<IResponse> => {
-    try {
-      const data = req.body as Omit<IUser, "id" | "deleted_at">;
-
-      if (
-        !data.name ||
-        !data.username ||
-        !data.email ||
-        !data.birthdate ||
-        !data.password
-      ) {
-        return res.code(400).send({
-          status: "error",
-          message: "Missing required fields",
-        } satisfies IResponse);
-      }
-
-      const response = await userModel.create(data);
-      return res.code(200).send({
-        status: "success",
-        message: "User created successfully",
-        data: response,
-      } satisfies IResponse);
-    } catch (err) {
-      return res.code(500).send({
-        status: "error",
-        message: "Failed to create user",
-        error: String(err),
-      } satisfies IResponse);
-    }
-  });
-
-  fastify.patch("/:id", async (req, res): Promise<IResponse> => {
-    try {
-      const { id } = req.params as { id: string };
-      const data = req.body as Omit<Partial<IUser>, "id" | "deleted_at">;
-      const response = await userModel.updateInfo(id, data);
-
-      return res.code(200).send({
-        status: "success",
-        message: "User info updated successfully",
-        data: response,
-      } satisfies IResponse);
-    } catch (err) {
-      return res.code(500).send({
-        status: "error",
-        message: "Failed to update user info",
-        error: String(err),
-      } satisfies IResponse);
-    }
-  });
-
-  fastify.put("/:id/password", async (req, res): Promise<IResponse> => {
-    try {
-      const { id } = req.params as { id: string };
-      const { oldPassword, newPassword } = req.body as {
-        oldPassword: string;
-        newPassword: string;
-      };
-
-      const hashedPassword = await bcrypt.hash(newPassword, 12);
-      if (!oldPassword || !newPassword || !hashedPassword) {
-        return res.code(400).send({
-          status: "success",
-          message: "Missing required fields",
-        } satisfies IResponse);
-      }
-
-      const response = await userModel.updatePassword(
-        id,
-        oldPassword,
-        hashedPassword
-      );
-
-      return res.code(200).send({
-        status: "success",
-        message: "User password updated successfully",
-        data: response,
-      } satisfies IResponse);
-    } catch (err) {
-      return res.status(500).send({
-        status: "error",
-        message: "Failed to update user password",
-        error: String(err),
-      } satisfies IResponse);
-    }
-  });
-
   fastify.get("/", async (_, res): Promise<IResponse> => {
     try {
       const response = await userModel.findAll();
@@ -164,6 +76,61 @@ export async function UserRoutes(fastify: FastifyInstance) {
       return res.code(500).send({
         status: "error",
         message: "Failed to find user",
+        error: String(err),
+      } satisfies IResponse);
+    }
+  });
+
+  fastify.patch("/:id", async (req, res): Promise<IResponse> => {
+    try {
+      const { id } = req.params as { id: string };
+      const data = req.body as Omit<Partial<IUser>, "id" | "deleted_at">;
+      const response = await userModel.updateInfo(id, data);
+
+      return res.code(200).send({
+        status: "success",
+        message: "User info updated successfully",
+        data: response,
+      } satisfies IResponse);
+    } catch (err) {
+      return res.code(500).send({
+        status: "error",
+        message: "Failed to update user info",
+        error: String(err),
+      } satisfies IResponse);
+    }
+  });
+
+  fastify.put("/:id/password", async (req, res): Promise<IResponse> => {
+    try {
+      const { id } = req.params as { id: string };
+      const { oldPassword, newPassword } = req.body as {
+        oldPassword: string;
+        newPassword: string;
+      };
+
+      if (!oldPassword || !newPassword) {
+        return res.code(400).send({
+          status: "success",
+          message: "Missing required fields",
+        } satisfies IResponse);
+      }
+
+      const response = await userModel.updatePassword(
+        id,
+        oldPassword,
+        newPassword
+      );
+
+      return res.code(200).send({
+        status: "success",
+        message: "User password updated successfully",
+        data: response,
+      } satisfies IResponse);
+    } catch (err) {
+      return res.status(500).send({
+        status: "error",
+        message: "Failed to update user password",
         error: String(err),
       } satisfies IResponse);
     }

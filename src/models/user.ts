@@ -32,16 +32,17 @@ export class UserModel {
     if (!user) throw new Error("User not found");
     const isValid = await bcrypt.compare(oldPassword, user.password);
     if (!isValid) throw new Error("Incorrect password");
+    const hashedNewPassword = await bcrypt.hash(newPassword, 12);
 
     const res = await database<IUser>(this.table)
       .where({ id })
       .whereNull("deleted_at")
-      .update({ password: newPassword });
+      .update({ password: hashedNewPassword });
     return res;
   }
 
   async findById(id: string) {
-    const res = await database(this.table)
+    const res = await database<IUser>(this.table)
       .where({ id })
       .whereNull("deleted_at")
       .first();
@@ -49,7 +50,7 @@ export class UserModel {
   }
 
   async findByEmail(email: string) {
-    const res = await database(this.table)
+    const res = await database<IUser>(this.table)
       .where({ email })
       .whereNull("deleted_at")
       .first();
@@ -57,7 +58,7 @@ export class UserModel {
   }
 
   async findByUsername(username: string) {
-    const res = await database(this.table)
+    const res = await database<IUser>(this.table)
       .whereILike("username", `%${username}%`)
       .whereNull("deleted_at")
       .limit(50);
@@ -65,7 +66,7 @@ export class UserModel {
   }
 
   async findAll() {
-    const res = await database(this.table).whereNull("deleted_at");
+    const res = await database<IUser>(this.table).whereNull("deleted_at");
     return res;
   }
 

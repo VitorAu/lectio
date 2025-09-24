@@ -65,3 +65,6 @@ jspm_packages/
 *.ntvs*
 *.njsproj
 *.sln
+
+# TAP test cache
+.tap/
