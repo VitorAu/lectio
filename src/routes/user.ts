@@ -150,7 +150,7 @@ export async function UserRoutes(fastify: FastifyInstance) {
     }
   });
 
-  fastify.get("/usernam/:username", async (req, res): Promise<IResponse> => {
+  fastify.get("/username/:username", async (req, res): Promise<IResponse> => {
     try {
       const { username } = req.params as { username: string };
       const response = userModel.findByUsername(username);
