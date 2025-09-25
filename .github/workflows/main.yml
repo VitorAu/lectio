@@ -68,7 +68,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: build
-        path: ./
+        path: dist/
 
   notify:
     runs-on: ubuntu-latest
@@ -110,3 +110,4 @@ jobs:
         - Build: ${{ needs.build.result }}
 
         Erro detectado no pipeline" | mail -s "❌ [LECTIO] - Pipeline FAIL" ${{ secrets.NOTIFICATION_EMAIL }}
+        fi
