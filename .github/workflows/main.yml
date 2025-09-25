@@ -39,7 +39,7 @@ jobs:
         cache: npm
 
     - name: Install dependencies
-      run: npm install
+      run: npm ci --inclide=dev
 
     - name: Run knex migrations
       run: npm run knex:latest
@@ -82,14 +82,14 @@ jobs:
     - name: Send email notification
       uses: dawidd6/action-send-mail@v3
       with:
-        server_address: smtp.office365.com
+        server_address: smtp.gmail.com
         server_port: 587
-        username: ${{ secrets.SMTP_EMAIL }}
-        password: ${{ secrets.SMTP_PASSWORD }}
+        username: ${{ secrets.SMTP_EMAIL_SENDER }}
+        password: ${{ secrets.SMTP_PASSWORD_SENDER }}
         subject: >
           [LECTIO] Pipeline ${{ needs.test.result == 'success' && needs.build.result == 'success' && 'SUCCESS ✅' || 'FAIL ❌' }}
-        to: ${{ secrets.SMTP_EMAIL }}
-        from: GitHub Actions <${{ secrets.SMTP_EMAIL }}>
+        to: ${{ secrets.SMTP_EMAIL_RECEIVER }}
+        from: GitHub Actions <${{ secrets.SMTP_EMAIL_SENDER }}>
         body: |
           Projeto: Lectio
           Branch: ${{ github.ref }}
