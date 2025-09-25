@@ -13,7 +13,7 @@ jobs:
     services:
       postgres:
         image: postgres:17
-        environment:
+        env:
           POSTGRES_USER: db_user
           POSTGRES_PASSWORD: db_password
           POSTGRES_DB: db_name
