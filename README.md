@@ -1,3 +1,5 @@
+[![CI/CD Pipeline](https://github.com/VitorAu/lectio/actions/workflows/main.yml/badge.svg)](https://github.com/VitorAu/lectio/actions/workflows/main.yml)
+
 # lectio
 
 Rede social voltada para leitores
