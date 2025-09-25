@@ -80,34 +80,23 @@ jobs:
       run: sudo apt update && sudo apt install mailutils
 
     - name: Send email notification
-      run: |
-        if [ "${{ needs.test.result }}" = "success" ] && [ "${{ needs.build.result }}" = "success" ]; then
-        echo "✅ Pipeline executado com sucesso ✅
-        Projeto: lectio
-        Status: sucesso
-        Branch: ${{ github.ref }}
-        Commit: ${{ github.sha }}
-        Autor: ${{ github.actor }}
-        Data: $(date)
+      uses: dawidd6/action-send-mail@v3
+      with:
+        server_address: smtp.office365.com
+        server_port: 587
+        username: ${{ secrets.SMTP_EMAIL }}
+        password: ${{ secrets.SMTP_PASSWORD }}
+        subject: >
+          [LECTIO] Pipeline ${{ needs.test.result == 'success' && needs.build.result == 'success' && 'SUCCESS ✅' || 'FAIL ❌' }}
+        to: ${{ secrets.SMTP_EMAIL }}
+        from: GitHub Actions <${{ secrets.SMTP_EMAIL }}>
+        body: |
+          Projeto: Lectio
+          Branch: ${{ github.ref }}
+          Commit: ${{ github.sha }}
+          Autor: ${{ github.actor }}
+          Data: $(date)
 
-        Jobs executados:
-        - Test: ${{ needs.test.result }}
-        - Build: ${{ needs.build.result }}
-
-        O pipeline foi concluído com sucesso" | mail -s "✅ [LECTIO] - Pipeline SUCCESS" ${{ secrets.NOTIFICATION_EMAIL }}
-        else
-        echo "❌ Pipeline falhou ❌
-
-        Projeto: Lectio
-        Status: Falha
-        Branch: ${{ github.ref }}
-        Commit: ${{ github.sha }}
-        Autor: ${{ github.actor }}
-        Data: $(date)
-            
-        Jobs executados:
-        - Test: ${{ needs.test.result }}
-        - Build: ${{ needs.build.result }}
-
-        Erro detectado no pipeline" | mail -s "❌ [LECTIO] - Pipeline FAIL" ${{ secrets.NOTIFICATION_EMAIL }}
-        fi
+          Jobs executados:
+          - Test: ${{ needs.test.result }}
+          - Build: ${{ needs.build.result }}

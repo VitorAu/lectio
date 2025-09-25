@@ -4,7 +4,7 @@
     "noEmit": false,
     "outDir": "dist",
     "rootDir": "src",
-    "allowImportingTsExtensions": true,
+    "allowImportingTsExtensions": false,
     "emitDeclarationOnly": false,
     "sourceMap": true
   },
