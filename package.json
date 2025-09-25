@@ -10,7 +10,7 @@
     "knex:latest": "knex migrate:latest",
     "knex:up": "knex migrate:up",
     "knex:down": "knex migrate:down",
-    "test": "npx tap"
+    "test": "npx tap --no-coverage"
   },
   "keywords": [],
   "author": "",
