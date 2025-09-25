@@ -95,7 +95,6 @@ jobs:
           Branch: ${{ github.ref }}
           Commit: ${{ github.sha }}
           Autor: ${{ github.actor }}
-          Data: $(date)
 
           Jobs executados:
           - Test: ${{ needs.test.result }}
