@@ -37,11 +37,9 @@ Create a `.env` file in the root of the project with the following content:
 
 ```env
 # Server configuration
-SERVER_PORT=3000
 JWT_SECRET="jwt_secret"
 
 # Database configuration
-DB_HOST="localhost"
 DB_PORT=5432
 DB_USER="db_user"
 DB_PASSWORD="db_password"
