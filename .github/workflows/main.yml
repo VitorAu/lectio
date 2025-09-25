@@ -1,0 +1,119 @@
+name: CI/CD Pipeline
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:17
+        environment:
+          POSTGRES_USER: db_user
+          POSTGRES_PASSWORD: db_password
+          POSTGRES_DB: db_name
+        ports:
+          - "5432:5432"
+        options: >-
+          --health-cmd="pg_isready -U db_user -d db_name"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    env:
+      DB_PORT: 5432
+      DB_USER: db_user
+      DB_PASSWORD: db_password
+      DB_NAME: db_name
+      JWT_SECRET: jwt_secret
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run knex migrations
+        run: npm run knex:latest
+
+      - name: Run tests
+        run: npm test
+
+  build:
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build application
+        run: npm run build
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build
+          path: ./
+
+  notify:
+    runs-on: ubuntu-latest
+    needs: [test, build]
+    if: always()
+
+    steps:
+      - name: Install dependencies
+        run: sudo apt update && sudo apt install mailutils
+
+      - name: Send email notification
+        run: |
+          if [ "${{ needs.test.result }}" = "success" ] && [ "${{ needs.build.result }}" = "success" ];
+            then
+              echo "✅ Pipeline executado com sucesso ✅
+              Projeto: lectio
+              Status: sucesso
+              Branch: ${{ github.ref }}
+              Commit: ${{ github.sha }}
+              Autor: ${{ github.actor }}
+              Data: $(date)
+
+              Jobs executados:
+              - Test: ${{ needs.test.result }}
+              - Build: ${{ needs.build.result }}
+
+              O pipeline foi concluído com sucesso
+              " | mail -s "✅ [LECTIO] - Pipeline SUCCESS" ${{ secrets.NOTIFICATION_EMAIL }}
+          else
+              echo "❌ Pipeline falhou ❌
+
+              Projeto: Lectio
+              Status: Falha
+              Branch: ${{ github.ref }}
+              Commit: ${{ github.sha }}
+              Autor: ${{ github.actor }}
+              Data: $(date)
+              
+              Jobs executados:
+              - Test: ${{ needs.test.result }}
+              - Build: ${{ needs.build.result }}
+
+              Erro detectado no pipeline
+              " | mail -s "❌ [LECTIO] - Pipeline FAIL" ${{ secrets.NOTIFICATION_EMAIL }}
