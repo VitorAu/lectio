@@ -39,7 +39,7 @@ jobs:
         cache: npm
 
     - name: Install dependencies
-      run: npm ci --inclide=dev
+      run: npm ci --include=dev
 
     - name: Run knex migrations
       run: npm run knex:latest
@@ -59,7 +59,7 @@ jobs:
         node-version: 22
 
     - name: Install dependencies
-      run: npm install
+      run: npm ci --include=dev
 
     - name: Build application
       run: npm run build

@@ -11,7 +11,7 @@
     "knex:latest": "node -r dotenv/config ./node_modules/.bin/knex migrate:latest --knexfile src/database/config/knexfile.ts",
     "knex:up": "node -r dotenv/config ./node_modules/.bin/knex migrate:up --knexfile src/database/config/knexfile.ts",
     "knex:down": "node -r dotenv/config ./node_modules/.bin/knex migrate:down --knexfile src/database/config/knexfile.ts",
-    "test": "npx tap --disable-coverage"
+    "test": "tap --disable-coverage"
   },
   "keywords": [],
   "author": "",
