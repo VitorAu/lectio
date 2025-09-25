@@ -11,7 +11,7 @@
     "knex:latest": "knex migrate:latest",
     "knex:up": "knex migrate:up",
     "knex:down": "knex migrate:down",
-    "test": "npx tap --disable-coverage --allow-missing-coverage"
+    "test": "npx tap --disable-coverage"
   },
   "keywords": [],
   "author": "",
